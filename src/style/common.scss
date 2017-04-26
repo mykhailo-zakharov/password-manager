@@ -8,3 +8,31 @@
 .content-menu {
   float: right;
 }
+
+.table {
+  width: 100%;
+}
+.table-row {
+  border-bottom: 1px solid #ddd;
+  &:hover {
+    background-color: #ddd;
+  }
+  &.table-header {
+    background-color: #ddd;
+    border-top: 2px solid #fff;
+    border-bottom: 1px solid #fff;
+  }
+  &.active {
+    background-color: #ddd;
+  }
+  &>td {
+    padding: 10px;
+  }
+}
+
+.btn {
+  margin: 0 5px;
+  background-color: rgba(0,0,0,.1);
+  padding: 2px 5px;
+  border-radius: 3px;
+}

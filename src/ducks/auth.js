@@ -1,6 +1,7 @@
 import { fireRef } from '../api/root'
 import {browserHistory} from 'react-router'
 
+
 export const types = {
     LOGIN_USER: "LOGIN_USER",
     LOGOUT: "LOGOUT",
