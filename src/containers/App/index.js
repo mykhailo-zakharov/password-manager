@@ -16,25 +16,27 @@ class App extends Component {
             <div className="main-wrap">
 
                 <div className="header">
-                    <h1 className="header-title">
-                        <h1>Password manager</h1>
-                    </h1>
+                    <h1 className="header-title">Password manager</h1>
                 </div>
 
-
-                {this.props.children}
+                {this.props.auth.status == "checking" ? "Проверка авторизации...." : this.props.children }
 
             </div>
         )
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth
+    }
+};
 const mapDispatchToProps = (dispatch) => ({
     ...bindActionCreators({
         ...authActions
     }, dispatch)
 });
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 

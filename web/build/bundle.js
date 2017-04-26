@@ -66,7 +66,7 @@ var main =
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6f4377dcd980f518ce1a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "12e56bd8d762ce9fa0d0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -5316,7 +5316,7 @@ var main =
 	var initialState = exports.initialState = {
 	    useremail: null,
 	    uid: null,
-	    status: null
+	    status: "checking"
 	};
 
 	exports.default = function () {
@@ -5328,19 +5328,22 @@ var main =
 	        case types.LOGOUT:
 	            return (0, _extends3.default)({}, state, {
 	                useremail: null,
-	                uid: null
+	                uid: null,
+	                status: null
 	            });
 
 	        case types.LOGIN_USER:
 	            return (0, _extends3.default)({}, state, {
 	                useremail: action.useremail,
-	                uid: action.uid
+	                uid: action.uid,
+	                status: "auth"
 	            });
 
 	        case types.REGISTER_USER:
 	            return (0, _extends3.default)({}, state, {
 	                useremail: action.useremail,
-	                uid: action.uid
+	                uid: action.uid,
+	                status: "auth"
 	            });
 
 	        case types.CHECK_LOGIN:
@@ -18587,10 +18590,6 @@ var main =
 
 	var _reactRedux = __webpack_require__(104);
 
-	var _reactRouter = __webpack_require__(50);
-
-	var _root = __webpack_require__(289);
-
 	var _auth = __webpack_require__(91);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -18601,16 +18600,6 @@ var main =
 	    function App(props) {
 	        (0, _classCallCheck3.default)(this, App);
 
-	        // fireRef.auth().onAuthStateChanged(function(user) {
-	        //     if (user) {
-	        //         browserHistory.push('/');
-	        //         console.log("true auth");
-	        //         console.log(user);
-	        //     } else {
-	        //         browserHistory.push('/login');
-	        //         console.log("not auth");
-	        //     }
-	        // })
 	        var _this = (0, _possibleConstructorReturn3.default)(this, (App.__proto__ || (0, _getPrototypeOf2.default)(App)).call(this, props));
 
 	        _this.props.checkLogin();
@@ -18629,25 +18618,26 @@ var main =
 	                    _react2.default.createElement(
 	                        'h1',
 	                        { className: 'header-title' },
-	                        _react2.default.createElement(
-	                            'h1',
-	                            null,
-	                            'Password manager'
-	                        )
+	                        'Password manager'
 	                    )
 	                ),
-	                this.props.children
+	                this.props.auth.status == "checking" ? "Проверка авторизации...." : this.props.children
 	            );
 	        }
 	    }]);
 	    return App;
 	}(_react.Component);
 
+	var mapStateToProps = function mapStateToProps(state) {
+	    return {
+	        auth: state.auth
+	    };
+	};
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	    return (0, _extends3.default)({}, (0, _redux.bindActionCreators)((0, _extends3.default)({}, _auth.actions), dispatch));
 	};
 
-	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(App);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 	module.exports = exports['default'];
 
 /***/ }),

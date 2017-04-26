@@ -35,4 +35,11 @@
   background-color: rgba(0,0,0,.1);
   padding: 2px 5px;
   border-radius: 3px;
+  cursor: pointer;
+}
+.header-title    {
+  font-size: 30px;
+  padding: 20px;
+  background-color: $main_color;
+  color: #fff;
 }

@@ -14,7 +14,7 @@ export const types = {
 export const initialState = {
     useremail: null,
     uid: null,
-    status: null
+    status: "checking"
 };
 
 export default (state = initialState, action) => {
@@ -23,19 +23,22 @@ export default (state = initialState, action) => {
         case types.LOGOUT:
             return {...state,
                 useremail: null,
-                uid: null
+                uid: null,
+                status: null
             };
 
         case types.LOGIN_USER:
             return {...state,
                 useremail: action.useremail,
-                uid: action.uid
+                uid: action.uid,
+                status: "auth"
             };
 
         case types.REGISTER_USER:
             return {...state,
                 useremail: action.useremail,
-                uid: action.uid
+                uid: action.uid,
+                status: "auth"
             };
 
         case types.CHECK_LOGIN:
