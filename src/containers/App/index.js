@@ -1,9 +1,17 @@
 import React, {Component} from 'react'
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
 
+import {actions as authActions} from '../../ducks/auth'
 
 class App extends Component {
+    constructor(props){
+        super(props);
 
-    render() {
+        this.props.checkLogin();
+    }
+
+    render(){
         return (
             <div className="main-wrap">
 
@@ -21,5 +29,12 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+    ...bindActionCreators({
+        ...authActions
+    }, dispatch)
+});
+
+export default connect(null, mapDispatchToProps)(App);
+
 

@@ -97,6 +97,7 @@ export const actions = {
                 });
         }
     },
+
     checkLogin: function(){
         return function(dispatch,getState){
                 dispatch({type:types.CHECK_LOGIN});
@@ -105,14 +106,21 @@ export const actions = {
                 .auth()
                 .onAuthStateChanged(function(user) {
                     if (user) {
-
+                        dispatch({
+                            type: types.REGISTER_USER,
+                            useremail: user.email,
+                            uid: user.uid
+                        });
+                        browserHistory.push('/');
                     } else {
                         // User is signed out.
                         dispatch({type:types.ERROR_LOGIN});
+                        browserHistory.push('/login');
                     }
                 });
         }
     },
+
     logoutUser: function(){
         return function(dispatch,getState){
             dispatch({type:types.LOGOUT});
