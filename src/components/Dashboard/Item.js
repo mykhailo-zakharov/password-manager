@@ -20,6 +20,7 @@ class Item extends Component {
 
         this.cansel = this.cansel.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
+        this.save = this.save.bind(this);
     }
 
     cansel(){
@@ -41,6 +42,21 @@ class Item extends Component {
             })
             .catch((e)=>console.log(e));
     }
+
+    save(){
+        let idItem = this.props.item.id,
+            uid = this.props.auth.uid;
+        let {name, password} = this.state;
+        console.log(idItem, name, password, uid);
+        this.props.saveItem(idItem, name, password, uid)
+            .then(()=>{
+                this.props.getList(uid);
+            })
+            .catch((e)=>console.log(e));
+
+        this.setState({isEdit: false});
+    }
+
 
     render() {
         let {item, index} = this.props,
@@ -90,8 +106,14 @@ class Item extends Component {
                     <td>
                         <button className="btn"
                                 onClick={this.cansel}
-                        >Отменить</button>
-                        <button className="btn">Сохранить</button>
+                        >
+                            Отменить
+                        </button>
+                        <button className="btn"
+                                onClick={this.save}
+                        >
+                            Сохранить
+                        </button>
                         <button className="btn"
                                 onClick={this.deleteItem}
                         >

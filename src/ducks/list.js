@@ -6,7 +6,8 @@ export const types = {
     GET_LIST: "GET_LIST",
     DEL_ITEM: "DEL_ITEM",
     EDIT_ITEM: "EDIT_ITEM",
-    ADD_ITEM: "ADD_ITEM"
+    ADD_ITEM: "ADD_ITEM",
+    SAVE_ITEM: "SAVE_ITEM"
 };
 
 export const initialState = {
@@ -30,6 +31,9 @@ export default (state = initialState, action) => {
         case types.ADD_ITEM:
             return {...state};
 
+        case types.SAVE_ITEM:
+            return {...state};
+
         default:
             return state
     }
@@ -49,7 +53,6 @@ export const actions = {
                         'Content-Type': 'application/json'
                     }
                 };
-            console.log(link);
 
             fetch(link, options)
                 .then(function (response) {
@@ -62,7 +65,6 @@ export const actions = {
                         // list.push({name: i, password: data[i]});
                         list.push(Object.assign({},data[i], {id:i}));
                     }
-                    console.log(list);
                     dispatch({type:types.GET_LIST, data: list});
                 })
                 .catch((error)=>console.log(error));
@@ -100,11 +102,31 @@ export const actions = {
                         'Content-Type': 'application/json'
                     }
                 };
-            console.log(link);
 
             return fetch(link, options)
                 .then(()=>{
                     return dispatch({type:types.DEL_ITEM});
+                })
+                .catch((error)=>console.log(error));
+        }
+
+    },
+
+    saveItem: function(idItem, name, password, uid){
+        return function(dispatch,getState){
+            let link = `${URL}/${uid}/${idItem}.json`,
+                newObj = {name, pw: password},
+                options = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newObj)
+                };
+
+            return fetch(link, options)
+                .then(()=>{
+                    return dispatch({type:types.SAVE_ITEM});
                 })
                 .catch((error)=>console.log(error));
         }

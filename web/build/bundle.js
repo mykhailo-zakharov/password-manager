@@ -66,7 +66,7 @@ var main =
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "12e56bd8d762ce9fa0d0"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3ce4acf4940a9ec7e052"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -7929,7 +7929,8 @@ var main =
 	    GET_LIST: "GET_LIST",
 	    DEL_ITEM: "DEL_ITEM",
 	    EDIT_ITEM: "EDIT_ITEM",
-	    ADD_ITEM: "ADD_ITEM"
+	    ADD_ITEM: "ADD_ITEM",
+	    SAVE_ITEM: "SAVE_ITEM"
 	};
 
 	var initialState = exports.initialState = {
@@ -7956,6 +7957,9 @@ var main =
 	        case types.ADD_ITEM:
 	            return (0, _extends3.default)({}, state);
 
+	        case types.SAVE_ITEM:
+	            return (0, _extends3.default)({}, state);
+
 	        default:
 	            return state;
 	    }
@@ -7974,7 +7978,6 @@ var main =
 	                    'Content-Type': 'application/json'
 	                }
 	            };
-	            console.log(link);
 
 	            fetch(link, options).then(function (response) {
 	                return response.json();
@@ -7985,7 +7988,6 @@ var main =
 	                    // list.push({name: i, password: data[i]});
 	                    list.push((0, _assign2.default)({}, data[i], { id: i }));
 	                }
-	                console.log(list);
 	                dispatch({ type: types.GET_LIST, data: list });
 	            }).catch(function (error) {
 	                return console.log(error);
@@ -8022,10 +8024,29 @@ var main =
 	                    'Content-Type': 'application/json'
 	                }
 	            };
-	            console.log(link);
 
 	            return fetch(link, options).then(function () {
 	                return dispatch({ type: types.DEL_ITEM });
+	            }).catch(function (error) {
+	                return console.log(error);
+	            });
+	        };
+	    },
+
+	    saveItem: function saveItem(idItem, name, password, uid) {
+	        return function (dispatch, getState) {
+	            var link = URL + "/" + uid + "/" + idItem + ".json",
+	                newObj = { name: name, pw: password },
+	                options = {
+	                method: 'PUT',
+	                headers: {
+	                    'Content-Type': 'application/json'
+	                },
+	                body: (0, _stringify2.default)(newObj)
+	            };
+
+	            return fetch(link, options).then(function () {
+	                return dispatch({ type: types.SAVE_ITEM });
 	            }).catch(function (error) {
 	                return console.log(error);
 	            });
@@ -17830,6 +17851,7 @@ var main =
 
 	        _this.cansel = _this.cansel.bind(_this);
 	        _this.deleteItem = _this.deleteItem.bind(_this);
+	        _this.save = _this.save.bind(_this);
 	        return _this;
 	    }
 
@@ -17858,9 +17880,29 @@ var main =
 	            });
 	        }
 	    }, {
+	        key: 'save',
+	        value: function save() {
+	            var _this3 = this;
+
+	            var idItem = this.props.item.id,
+	                uid = this.props.auth.uid;
+	            var _state = this.state,
+	                name = _state.name,
+	                password = _state.password;
+
+	            console.log(idItem, name, password, uid);
+	            this.props.saveItem(idItem, name, password, uid).then(function () {
+	                _this3.props.getList(uid);
+	            }).catch(function (e) {
+	                return console.log(e);
+	            });
+
+	            this.setState({ isEdit: false });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this3 = this;
+	            var _this4 = this;
 
 	            var _props = this.props,
 	                item = _props.item,
@@ -17894,7 +17936,7 @@ var main =
 	                            'button',
 	                            { className: 'btn',
 	                                onClick: function onClick() {
-	                                    return _this3.setState({ viewPw: !_this3.state.viewPw });
+	                                    return _this4.setState({ viewPw: !_this4.state.viewPw });
 	                                }
 	                            },
 	                            this.state.viewPw ? "Скрыть" : "Посмотреть"
@@ -17903,7 +17945,7 @@ var main =
 	                            'button',
 	                            { className: 'btn',
 	                                onClick: function onClick() {
-	                                    return _this3.setState({ isEdit: !_this3.state.isEdit });
+	                                    return _this4.setState({ isEdit: !_this4.state.isEdit });
 	                                }
 	                            },
 	                            '\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C'
@@ -17932,7 +17974,7 @@ var main =
 	                        _react2.default.createElement('input', { type: 'text',
 	                            value: this.state.name,
 	                            onChange: function onChange(e) {
-	                                return _this3.setState({ name: e.target.value });
+	                                return _this4.setState({ name: e.target.value });
 	                            }
 	                        })
 	                    ),
@@ -17942,7 +17984,7 @@ var main =
 	                        _react2.default.createElement('input', { type: 'text',
 	                            value: this.state.password,
 	                            onChange: function onChange(e) {
-	                                return _this3.setState({ password: e.target.value });
+	                                return _this4.setState({ password: e.target.value });
 	                            }
 	                        })
 	                    ),
@@ -17958,7 +18000,9 @@ var main =
 	                        ),
 	                        _react2.default.createElement(
 	                            'button',
-	                            { className: 'btn' },
+	                            { className: 'btn',
+	                                onClick: this.save
+	                            },
 	                            '\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C'
 	                        ),
 	                        _react2.default.createElement(
@@ -18116,7 +18160,8 @@ var main =
 	                    ),
 	                    _react2.default.createElement(
 	                        'button',
-	                        { onClick: function onClick() {
+	                        { className: 'btn',
+	                            onClick: function onClick() {
 	                                return _this3.props.logoutUser();
 	                            } },
 	                        '\u0412\u044B\u0439\u0442\u0438'

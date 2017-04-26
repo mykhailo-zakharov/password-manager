@@ -60,7 +60,10 @@ class Dashboard extends Component {
       <div className='content'>
         <div className="content-menu">
           <h1>{this.props.auth.useremail}</h1>
-          <button onClick={()=>this.props.logoutUser()}>Выйти</button>
+          <button className="btn"
+                  onClick={()=>this.props.logoutUser()}>
+              Выйти
+          </button>
         </div>
 
           <div>
@@ -116,3 +119,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+
+
