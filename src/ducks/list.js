@@ -10,7 +10,7 @@ export const types = {
 };
 
 export const initialState = {
-    list: null
+    list: []
 };
 
 export default (state = initialState, action) => {
@@ -35,6 +35,7 @@ export default (state = initialState, action) => {
     }
 }
 
+
 export const actions = {
 
     getList: function(uid){
@@ -56,30 +57,58 @@ export const actions = {
                 })
                 .then((data)=>{
                     console.log(data);
-                    dispatch({type:types.GET_LIST, data});
+                    let list = [];
+                    for(let i in data) {
+                        // list.push({name: i, password: data[i]});
+                        list.push(Object.assign({},data[i], {id:i}));
+                    }
+                    console.log(list);
+                    dispatch({type:types.GET_LIST, data: list});
                 })
                 .catch((error)=>console.log(error));
 
-
-
-
-            // fireRef
-            //     .auth()
-            //     .createUserWithEmailAndPassword(email, password)
-            //     .then((data)=>{
-            //         console.log("data sing", data);
-            //         dispatch({
-            //             type: types.REGISTER_USER,
-            //             useremail: data.email,
-            //             uid: data.uid
-            //         });
-            //         browserHistory.push(`/`);
-            //     })
-            //     .catch(function(error) {
-            //         dispatch({type:types.ERROR_LOGIN});
-            //         alert(error.message);
-            //     });
         }
+    },
+
+    addItem: function(newName, NewPw, uid){
+        return function(dispatch,getState){
+            let link = `${URL}/${uid}.json`,
+                newObj = {name: newName, pw: NewPw},
+                options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newObj)
+                };
+
+            return fetch(link, options)
+                .then(()=>{
+                    return dispatch({type:types.ADD_ITEM});
+                })
+                .catch((error)=>console.log(error));
+        }
+
+    },
+
+    delItem: function(idItem, uid){
+        return function(dispatch,getState){
+            let link = `${URL}/${uid}/${idItem}.json`,
+                options = {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+            console.log(link);
+
+            return fetch(link, options)
+                .then(()=>{
+                    return dispatch({type:types.DEL_ITEM});
+                })
+                .catch((error)=>console.log(error));
+        }
+
     }
 
 };

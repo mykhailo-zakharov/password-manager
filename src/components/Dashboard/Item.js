@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 
 import {actions as authActions} from '../../ducks/auth'
-
+import {actions as listActions} from '../../ducks/list'
 
 
 class Item extends Component {
@@ -15,22 +15,36 @@ class Item extends Component {
             isEdit: false,
             viewPw: false,
             name: this.props.item.name,
-            password: this.props.item.password
+            password: this.props.item.pw
         };
+
         this.cansel = this.cansel.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
     }
 
     cansel(){
         this.setState({
             isEdit: false,
             name: this.props.item.name,
-            password: this.props.item.password
+            password: this.props.item.pw
         });
+    }
+
+    deleteItem(){
+        let uid = this.props.auth.uid,
+            idItem = this.props.item.id;
+
+        console.log(idItem, uid);
+        this.props.delItem(idItem, uid)
+            .then(()=>{
+                this.props.getList(uid);
+            })
+            .catch((e)=>console.log(e));
     }
 
     render() {
         let {item, index} = this.props,
-            password = this.state.viewPw ? item.password : "********";
+            password = this.state.viewPw ? item.pw : "********";
 
         if(!this.state.isEdit) {
             return (
@@ -47,8 +61,13 @@ class Item extends Component {
                         <button className="btn"
                                 onClick={() => this.setState({isEdit: !this.state.isEdit})}
                         >
-                            Редактировать</button>
-                        <button className="btn">Удалить</button>
+                            Редактировать
+                        </button>
+                        <button className="btn"
+                                onClick={this.deleteItem}
+                        >
+                            Удалить
+                        </button>
                     </td>
                 </tr>
             )
@@ -73,7 +92,11 @@ class Item extends Component {
                                 onClick={this.cansel}
                         >Отменить</button>
                         <button className="btn">Сохранить</button>
-                        <button className="btn">Удалить</button>
+                        <button className="btn"
+                                onClick={this.deleteItem}
+                        >
+                            Удалить
+                        </button>
                     </td>
                 </tr>
 
@@ -83,12 +106,13 @@ class Item extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-        auth: state.auth
+        auth: state.auth,
     }
 };
 const mapDispatchToProps = (dispatch) => ({
     ...bindActionCreators({
-        ...authActions
+        ...authActions,
+        ...listActions
     }, dispatch)
 });
 

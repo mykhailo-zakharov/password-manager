@@ -13,12 +13,41 @@ class Dashboard extends Component {
   constructor(props){
     super(props);
 
+    this.state = {
+        newName: null,
+        password: null
+    };
+
+    this.addItem = this.addItem.bind(this);
+
   }
 
-componentWillMount() {
-  let uid = this.props.auth.uid;
-  this.props.getList(uid);
-}
+    componentWillMount() {
+      let uid = this.props.auth.uid;
+      this.props.getList(uid);
+    }
+
+    addItem(){
+      let {password, newName} = this.state,
+          uid = this.props.auth.uid;
+
+      if(password == "" || newName == ""){
+          alert("Заполните все поля!");
+          return null;
+      }
+
+      this.props.addItem(newName, password, uid)
+          .then(()=>{
+                this.props.getList(uid);
+          })
+          .catch((e)=>console.log(e));
+
+        this.setState({
+            newName: "",
+            password: ""
+        });
+
+    }
 
 
   render() {
@@ -31,14 +60,33 @@ componentWillMount() {
       <div className='content'>
         <div className="content-menu">
           <h1>{this.props.auth.useremail}</h1>
-          <a onClick={()=>this.props.logoutUser}>Выйти</a>
+          <button onClick={()=>this.props.logoutUser()}>Выйти</button>
         </div>
+
+          <div>
+
+              <input type="text"
+                     value={this.state.newName}
+                     onChange={(e)=>this.setState({newName: e.target.value})}
+              />
+              <input type="text"
+                     value={this.state.password}
+                     onChange={(e)=>this.setState({password: e.target.value})}
+              />
+              <button className="btn"
+                      onClick={this.addItem}
+              >
+                  Добавить
+              </button>
+
+          </div>
+
 
           <table className="table">
               <tr className="table-row table-header">
                   <td>№</td>
-                  <td>Название</td>
-                  <td>Пароль</td>
+                  <td style={{width: "250px"}}>Название</td>
+                  <td style={{width: "250px"}}>Пароль</td>
                   <td>Управление</td>
               </tr>
 

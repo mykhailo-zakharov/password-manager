@@ -66,7 +66,7 @@ var main =
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "b2450b5914106cad4f5c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "622b80cdc13e6b91ae07"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -17615,7 +17615,7 @@ var main =
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _extends2 = __webpack_require__(91);
@@ -17663,93 +17663,153 @@ var main =
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Dashboard = function (_Component) {
-	  (0, _inherits3.default)(Dashboard, _Component);
+	    (0, _inherits3.default)(Dashboard, _Component);
 
-	  function Dashboard(props) {
-	    (0, _classCallCheck3.default)(this, Dashboard);
-	    return (0, _possibleConstructorReturn3.default)(this, (Dashboard.__proto__ || (0, _getPrototypeOf2.default)(Dashboard)).call(this, props));
-	  }
+	    function Dashboard(props) {
+	        (0, _classCallCheck3.default)(this, Dashboard);
 
-	  (0, _createClass3.default)(Dashboard, [{
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      var uid = this.props.auth.uid;
-	      this.props.getList(uid);
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (Dashboard.__proto__ || (0, _getPrototypeOf2.default)(Dashboard)).call(this, props));
+
+	        _this.state = {
+	            newName: null,
+	            password: null
+	        };
+
+	        _this.addItem = _this.addItem.bind(_this);
+
+	        return _this;
 	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
 
-	      if (!this.props.auth.useremail) {
-	        _reactRouter.browserHistory.push('/login');
-	        return null;
-	      }
+	    (0, _createClass3.default)(Dashboard, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            var uid = this.props.auth.uid;
+	            this.props.getList(uid);
+	        }
+	    }, {
+	        key: 'addItem',
+	        value: function addItem() {
+	            var _this2 = this;
 
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'content' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'content-menu' },
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            this.props.auth.useremail
-	          ),
-	          _react2.default.createElement(
-	            'a',
-	            { onClick: function onClick() {
-	                return _this2.props.logoutUser;
-	              } },
-	            '\u0412\u044B\u0439\u0442\u0438'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'table',
-	          { className: 'table' },
-	          _react2.default.createElement(
-	            'tr',
-	            { className: 'table-row table-header' },
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              '\u2116'
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              '\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435'
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              '\u041F\u0430\u0440\u043E\u043B\u044C'
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              '\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435'
-	            )
-	          ),
-	          this.props.list && this.props.list.map(function (item, index) {
-	            return _react2.default.createElement(_Item2.default, { item: item, index: index });
-	          })
-	        )
-	      );
-	    }
-	  }]);
-	  return Dashboard;
+	            var _state = this.state,
+	                password = _state.password,
+	                newName = _state.newName,
+	                uid = this.props.auth.uid;
+
+
+	            if (password == "" || newName == "") {
+	                alert("Заполните все поля!");
+	                return null;
+	            }
+
+	            this.props.addItem(newName, password, uid).then(function () {
+	                _this2.props.getList(uid);
+	            }).catch(function (e) {
+	                return console.log(e);
+	            });
+
+	            this.setState({
+	                newName: "",
+	                password: ""
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this3 = this;
+
+	            if (!this.props.auth.useremail) {
+	                _reactRouter.browserHistory.push('/login');
+	                return null;
+	            }
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'content' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'content-menu' },
+	                    _react2.default.createElement(
+	                        'h1',
+	                        null,
+	                        this.props.auth.useremail
+	                    ),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { onClick: function onClick() {
+	                                return _this3.props.logoutUser();
+	                            } },
+	                        '\u0412\u044B\u0439\u0442\u0438'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    null,
+	                    _react2.default.createElement('input', { type: 'text',
+	                        value: this.state.newName,
+	                        onChange: function onChange(e) {
+	                            return _this3.setState({ newName: e.target.value });
+	                        }
+	                    }),
+	                    _react2.default.createElement('input', { type: 'text',
+	                        value: this.state.password,
+	                        onChange: function onChange(e) {
+	                            return _this3.setState({ password: e.target.value });
+	                        }
+	                    }),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'btn',
+	                            onClick: this.addItem
+	                        },
+	                        '\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'table',
+	                    { className: 'table' },
+	                    _react2.default.createElement(
+	                        'tr',
+	                        { className: 'table-row table-header' },
+	                        _react2.default.createElement(
+	                            'td',
+	                            null,
+	                            '\u2116'
+	                        ),
+	                        _react2.default.createElement(
+	                            'td',
+	                            { style: { width: "250px" } },
+	                            '\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435'
+	                        ),
+	                        _react2.default.createElement(
+	                            'td',
+	                            { style: { width: "250px" } },
+	                            '\u041F\u0430\u0440\u043E\u043B\u044C'
+	                        ),
+	                        _react2.default.createElement(
+	                            'td',
+	                            null,
+	                            '\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435'
+	                        )
+	                    ),
+	                    this.props.list && this.props.list.map(function (item, index) {
+	                        return _react2.default.createElement(_Item2.default, { item: item, index: index });
+	                    })
+	                )
+	            );
+	        }
+	    }]);
+	    return Dashboard;
 	}(_react.Component);
 
 	var mapStateToProps = function mapStateToProps(state) {
-	  return {
-	    auth: state.auth,
-	    list: state.list.list
-	  };
+	    return {
+	        auth: state.auth,
+	        list: state.list.list
+	    };
 	};
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return (0, _extends3.default)({}, (0, _redux.bindActionCreators)((0, _extends3.default)({}, _auth.actions, _list.actions), dispatch));
+	    return (0, _extends3.default)({}, (0, _redux.bindActionCreators)((0, _extends3.default)({}, _auth.actions, _list.actions), dispatch));
 	};
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dashboard);
@@ -22547,7 +22607,12 @@ var main =
 	module.exports = __webpack_require__(39);
 
 /***/ }),
-/* 480 */,
+/* 480 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(487), __esModule: true };
+
+/***/ }),
 /* 481 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22584,7 +22649,16 @@ var main =
 	module.exports = { "default": __webpack_require__(494), __esModule: true };
 
 /***/ }),
-/* 487 */,
+/* 487 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var core  = __webpack_require__(36)
+	  , $JSON = core.JSON || (core.JSON = {stringify: JSON.stringify});
+	module.exports = function stringify(it){ // eslint-disable-line no-unused-vars
+	  return $JSON.stringify.apply($JSON, arguments);
+	};
+
+/***/ }),
 /* 488 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -41205,6 +41279,8 @@ var main =
 
 	var _auth = __webpack_require__(103);
 
+	var _list = __webpack_require__(693);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Item = function (_Component) {
@@ -41219,9 +41295,11 @@ var main =
 	            isEdit: false,
 	            viewPw: false,
 	            name: _this.props.item.name,
-	            password: _this.props.item.password
+	            password: _this.props.item.pw
 	        };
+
 	        _this.cansel = _this.cansel.bind(_this);
+	        _this.deleteItem = _this.deleteItem.bind(_this);
 	        return _this;
 	    }
 
@@ -41231,18 +41309,33 @@ var main =
 	            this.setState({
 	                isEdit: false,
 	                name: this.props.item.name,
-	                password: this.props.item.password
+	                password: this.props.item.pw
+	            });
+	        }
+	    }, {
+	        key: 'deleteItem',
+	        value: function deleteItem() {
+	            var _this2 = this;
+
+	            var uid = this.props.auth.uid,
+	                idItem = this.props.item.id;
+
+	            console.log(idItem, uid);
+	            this.props.delItem(idItem, uid).then(function () {
+	                _this2.props.getList(uid);
+	            }).catch(function (e) {
+	                return console.log(e);
 	            });
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this2 = this;
+	            var _this3 = this;
 
 	            var _props = this.props,
 	                item = _props.item,
 	                index = _props.index,
-	                password = this.state.viewPw ? item.password : "********";
+	                password = this.state.viewPw ? item.pw : "********";
 
 
 	            if (!this.state.isEdit) {
@@ -41271,7 +41364,7 @@ var main =
 	                            'button',
 	                            { className: 'btn',
 	                                onClick: function onClick() {
-	                                    return _this2.setState({ viewPw: !_this2.state.viewPw });
+	                                    return _this3.setState({ viewPw: !_this3.state.viewPw });
 	                                }
 	                            },
 	                            this.state.viewPw ? "Скрыть" : "Посмотреть"
@@ -41280,14 +41373,16 @@ var main =
 	                            'button',
 	                            { className: 'btn',
 	                                onClick: function onClick() {
-	                                    return _this2.setState({ isEdit: !_this2.state.isEdit });
+	                                    return _this3.setState({ isEdit: !_this3.state.isEdit });
 	                                }
 	                            },
 	                            '\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C'
 	                        ),
 	                        _react2.default.createElement(
 	                            'button',
-	                            { className: 'btn' },
+	                            { className: 'btn',
+	                                onClick: this.deleteItem
+	                            },
 	                            '\u0423\u0434\u0430\u043B\u0438\u0442\u044C'
 	                        )
 	                    )
@@ -41307,7 +41402,7 @@ var main =
 	                        _react2.default.createElement('input', { type: 'text',
 	                            value: this.state.name,
 	                            onChange: function onChange(e) {
-	                                return _this2.setState({ name: e.target.value });
+	                                return _this3.setState({ name: e.target.value });
 	                            }
 	                        })
 	                    ),
@@ -41317,7 +41412,7 @@ var main =
 	                        _react2.default.createElement('input', { type: 'text',
 	                            value: this.state.password,
 	                            onChange: function onChange(e) {
-	                                return _this2.setState({ password: e.target.value });
+	                                return _this3.setState({ password: e.target.value });
 	                            }
 	                        })
 	                    ),
@@ -41338,7 +41433,9 @@ var main =
 	                        ),
 	                        _react2.default.createElement(
 	                            'button',
-	                            { className: 'btn' },
+	                            { className: 'btn',
+	                                onClick: this.deleteItem
+	                            },
 	                            '\u0423\u0434\u0430\u043B\u0438\u0442\u044C'
 	                        )
 	                    )
@@ -41355,7 +41452,7 @@ var main =
 	    };
 	};
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	    return (0, _extends3.default)({}, (0, _redux.bindActionCreators)((0, _extends3.default)({}, _auth.actions), dispatch));
+	    return (0, _extends3.default)({}, (0, _redux.bindActionCreators)((0, _extends3.default)({}, _auth.actions, _list.actions), dispatch));
 	};
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Item);
@@ -41372,6 +41469,14 @@ var main =
 	    value: true
 	});
 	exports.actions = exports.initialState = exports.types = undefined;
+
+	var _stringify = __webpack_require__(480);
+
+	var _stringify2 = _interopRequireDefault(_stringify);
+
+	var _assign = __webpack_require__(481);
+
+	var _assign2 = _interopRequireDefault(_assign);
 
 	var _extends2 = __webpack_require__(91);
 
@@ -41391,7 +41496,7 @@ var main =
 	};
 
 	var initialState = exports.initialState = {
-	    list: null
+	    list: []
 	};
 
 	exports.default = function () {
@@ -41438,27 +41543,55 @@ var main =
 	                return response.json();
 	            }).then(function (data) {
 	                console.log(data);
-	                dispatch({ type: types.GET_LIST, data: data });
+	                var list = [];
+	                for (var i in data) {
+	                    // list.push({name: i, password: data[i]});
+	                    list.push((0, _assign2.default)({}, data[i], { id: i }));
+	                }
+	                console.log(list);
+	                dispatch({ type: types.GET_LIST, data: list });
 	            }).catch(function (error) {
 	                return console.log(error);
 	            });
+	        };
+	    },
 
-	            // fireRef
-	            //     .auth()
-	            //     .createUserWithEmailAndPassword(email, password)
-	            //     .then((data)=>{
-	            //         console.log("data sing", data);
-	            //         dispatch({
-	            //             type: types.REGISTER_USER,
-	            //             useremail: data.email,
-	            //             uid: data.uid
-	            //         });
-	            //         browserHistory.push(`/`);
-	            //     })
-	            //     .catch(function(error) {
-	            //         dispatch({type:types.ERROR_LOGIN});
-	            //         alert(error.message);
-	            //     });
+	    addItem: function addItem(newName, NewPw, uid) {
+	        return function (dispatch, getState) {
+	            var link = URL + "/" + uid + ".json",
+	                newObj = { name: newName, pw: NewPw },
+	                options = {
+	                method: 'POST',
+	                headers: {
+	                    'Content-Type': 'application/json'
+	                },
+	                body: (0, _stringify2.default)(newObj)
+	            };
+
+	            return fetch(link, options).then(function () {
+	                return dispatch({ type: types.ADD_ITEM });
+	            }).catch(function (error) {
+	                return console.log(error);
+	            });
+	        };
+	    },
+
+	    delItem: function delItem(idItem, uid) {
+	        return function (dispatch, getState) {
+	            var link = URL + "/" + uid + "/" + idItem + ".json",
+	                options = {
+	                method: 'DELETE',
+	                headers: {
+	                    'Content-Type': 'application/json'
+	                }
+	            };
+	            console.log(link);
+
+	            return fetch(link, options).then(function () {
+	                return dispatch({ type: types.DEL_ITEM });
+	            }).catch(function (error) {
+	                return console.log(error);
+	            });
 	        };
 	    }
 
